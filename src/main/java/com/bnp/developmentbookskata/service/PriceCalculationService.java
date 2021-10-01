@@ -48,56 +48,27 @@ public class PriceCalculationService {
     }
 
     private List<Set<Book>> groupBooksInUniqueSets(List<Book> bookList) {
-        List<Set<Book>> bookListSets = new ArrayList<>();
-        Set<Book> initialSet = new HashSet<>();
-        bookListSets.add(initialSet);
+        List<Set<Book>> bookListSets = initializeBookListSets();
 
         for (Book book : bookList) {
-            boolean bookAddedToExistingSet = false;
-            for (Set<Book> set : bookListSets) {
-                if (!set.contains(book)) {
-                    set.add(book);
-                    bookAddedToExistingSet = true;
-                    break;
-                }
-            }
+            boolean bookAddedToExistingSet = addBookToExistingSet(bookListSets, book);
             if (!bookAddedToExistingSet) {
-                Set<Book> newSet = new HashSet<>();
-                newSet.add(book);
-                bookListSets.add(newSet);
+                addBookToNewSet(bookListSets, book);
             }
         }
         return bookListSets;
     }
 
     private List<Set<Book>> groupBooksInUniqueAndSmallestSets(List<Book> bookList) {
-        List<Set<Book>> bookListSets = new ArrayList<>();
-        Set<Book> initialSet = new HashSet<>();
-        bookListSets.add(initialSet);
+        List<Set<Book>> bookListSets = initializeBookListSets();
 
         for (Book book : bookList) {
-            boolean bookAddedToExistingSet = false;
-            Integer smallestSizedSetIndex = null;
-            // Maximum size of a set is the size of the bookList
-            int setSizeOfSmallestSet = bookList.size();
-            for (int i = 0; i < bookListSets.size(); i++) {
-                if (!bookListSets.get(i).contains(book)) {
-                    int setSize = bookListSets.get(i).size();
-                    if (setSize < setSizeOfSmallestSet) {
-                        setSizeOfSmallestSet = setSize;
-                        smallestSizedSetIndex = i;
+            Integer smallestSizedSetIndex = getSmallestSizedSetIndex(bookList, bookListSets, book);
 
-                    }
-                }
-            }
             if (smallestSizedSetIndex != null) {
                 bookListSets.get(smallestSizedSetIndex).add(book);
-                bookAddedToExistingSet = true;
-            }
-            if (!bookAddedToExistingSet) {
-                Set<Book> newSet = new HashSet<>();
-                newSet.add(book);
-                bookListSets.add(newSet);
+            } else {
+                addBookToNewSet(bookListSets, book);
             }
         }
         return bookListSets;
@@ -108,6 +79,47 @@ public class PriceCalculationService {
         double discountedPriceForSet = basePrice - ((basePrice * threeUniqueBooksDiscountPercentage) / 100.0);
         totalPrice += discountedPriceForSet;
         return totalPrice;
+    }
+
+    private boolean addBookToExistingSet(List<Set<Book>> bookListSets, Book book) {
+        boolean bookAddedToExistingSet = false;
+        for (Set<Book> set : bookListSets) {
+            if (!set.contains(book)) {
+                set.add(book);
+                bookAddedToExistingSet = true;
+                break;
+            }
+        }
+        return bookAddedToExistingSet;
+    }
+
+    private Integer getSmallestSizedSetIndex(List<Book> bookList, List<Set<Book>> bookListSets, Book book) {
+        Integer smallestSizedSetIndex = null;
+        // Maximum size of a set is the size of the bookList
+        int setSizeOfSmallestSet = bookList.size();
+        for (int i = 0; i < bookListSets.size(); i++) {
+            if (!bookListSets.get(i).contains(book)) {
+                int setSize = bookListSets.get(i).size();
+                if (setSize < setSizeOfSmallestSet) {
+                    setSizeOfSmallestSet = setSize;
+                    smallestSizedSetIndex = i;
+                }
+            }
+        }
+        return smallestSizedSetIndex;
+    }
+
+    private void addBookToNewSet(List<Set<Book>> bookListSets, Book book) {
+        Set<Book> newSet = new HashSet<>();
+        newSet.add(book);
+        bookListSets.add(newSet);
+    }
+
+    private List<Set<Book>> initializeBookListSets() {
+        List<Set<Book>> bookListSets = new ArrayList<>();
+        Set<Book> initialSet = new HashSet<>();
+        bookListSets.add(initialSet);
+        return bookListSets;
     }
 
 
