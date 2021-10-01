@@ -11,6 +11,7 @@ public class PriceCalculationService {
     private static final double BOOK_PRICE = 50d;
     private static final double TWO_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 5;
     private static final double THREE_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 10;
+    private static final double FOUR_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 20;
 
     public Double calculatePrice(List<Book> bookList) {
         List<Set<Book>> bookListSets = new ArrayList<>();
@@ -30,6 +31,9 @@ public class PriceCalculationService {
             }
             if (set.size() == 3) {
                 totalPrice = calculatePriceForBooksSet(totalPrice, set, THREE_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE);
+            }
+            if (set.size() == 4) {
+                totalPrice = calculatePriceForBooksSet(totalPrice, set, FOUR_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE);
             }
         }
 

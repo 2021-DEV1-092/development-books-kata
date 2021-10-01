@@ -20,6 +20,7 @@ public class PriceCalculationServiceTest {
     private Book book_1;
     private Book book_2;
     private Book book_3;
+    private Book book_4;
 
     @Before
     public void setUp() {
@@ -37,6 +38,11 @@ public class PriceCalculationServiceTest {
                 .title("Clean Architecture")
                 .author("Robert Martin")
                 .year(2017).build();
+
+        book_4 = Book.builder()
+                .title("Test Driven Development by Example")
+                .author("Kent Beck")
+                .year(2003).build();
     }
 
     @Test
@@ -114,6 +120,32 @@ public class PriceCalculationServiceTest {
         Double calculatedPrice = service.calculatePrice(bookList);
 
         assertThat(calculatedPrice).isEqualTo(270);
+    }
+
+    @Test
+    public void verify_1A_1B_1C_1D_ReturnsCorrectPrice() {
+        PriceCalculationService service = new PriceCalculationService();
+        List<Book> bookList = List.of(
+                book_1,
+                book_2,
+                book_3,
+                book_4);
+        Double calculatedPrice = service.calculatePrice(bookList);
+
+        assertThat(calculatedPrice).isEqualTo(160);
+    }
+
+    @Test
+    public void verify_3A_3B_3C_2D_ReturnsCorrectPrice() {
+        PriceCalculationService service = new PriceCalculationService();
+        List<Book> bookList = List.of(
+                book_1, book_1, book_1,
+                book_2, book_2, book_2,
+                book_3, book_3, book_3,
+                book_4, book_4);
+        Double calculatedPrice = service.calculatePrice(bookList);
+
+        assertThat(calculatedPrice).isEqualTo(455);
     }
 }
 
