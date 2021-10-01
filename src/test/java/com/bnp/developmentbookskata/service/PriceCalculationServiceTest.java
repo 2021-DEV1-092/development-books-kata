@@ -21,6 +21,7 @@ public class PriceCalculationServiceTest {
     private Book book_2;
     private Book book_3;
     private Book book_4;
+    private Book book_5;
 
     @Before
     public void setUp() {
@@ -43,6 +44,11 @@ public class PriceCalculationServiceTest {
                 .title("Test Driven Development by Example")
                 .author("Kent Beck")
                 .year(2003).build();
+
+        book_5 = Book.builder()
+                .title("Working Effectively With Legacy Code")
+                .author("Michael C. Feathers")
+                .year(2001).build();
     }
 
     @Test
@@ -111,6 +117,18 @@ public class PriceCalculationServiceTest {
     }
 
     @Test
+    public void verify_1A_1B_1D_ReturnsCorrectPrice() {
+        PriceCalculationService service = new PriceCalculationService();
+        List<Book> bookList = List.of(
+                book_1,
+                book_2,
+                book_4);
+        Double calculatedPrice = service.calculatePrice(bookList);
+
+        assertThat(calculatedPrice).isEqualTo(135);
+    }
+
+    @Test
     public void verify_2A_2B_2C_ReturnsCorrectPrice() {
         PriceCalculationService service = new PriceCalculationService();
         List<Book> bookList = List.of(
@@ -147,5 +165,35 @@ public class PriceCalculationServiceTest {
 
         assertThat(calculatedPrice).isEqualTo(455);
     }
+
+    @Test
+    public void verify_1A_1B_1C_1D_1E_ReturnsCorrectPrice() {
+        PriceCalculationService service = new PriceCalculationService();
+        List<Book> bookList = List.of(
+                book_1,
+                book_2,
+                book_3,
+                book_4,
+                book_5);
+        Double calculatedPrice = service.calculatePrice(bookList);
+
+        assertThat(calculatedPrice).isEqualTo(187.5);
+    }
+
+    @Test
+    public void verify_2A_2B_2C_1D_1E_ReturnsCorrectPrice() {
+        PriceCalculationService service = new PriceCalculationService();
+        List<Book> bookList = List.of(
+                book_1, book_1,
+                book_2, book_2,
+                book_3, book_3,
+                book_4,
+                book_5);
+        Double calculatedPrice = service.calculatePrice(bookList);
+
+        assertThat(calculatedPrice).isEqualTo(320);
+    }
+
+
 }
 
