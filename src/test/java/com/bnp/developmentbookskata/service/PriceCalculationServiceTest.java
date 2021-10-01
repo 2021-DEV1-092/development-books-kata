@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PriceCalculationServiceTest {
 
     @Test
-    public void canCreatePriceCalculation() {
+    public void verifyOneBookReturnsCorrectPrice() {
         PriceCalculationService service = new PriceCalculationService();
         List<Book> bookList = List.of(Book.builder()
                         .title("Clean Code")
@@ -19,4 +19,20 @@ public class PriceCalculationServiceTest {
         Double calculatedPrice = service.calculatePrice(bookList);
         assertThat(calculatedPrice).isEqualTo(50);
     }
+
+    @Test
+    public void verifyTwoSameBooksReturnsCorrectPrice() {
+        PriceCalculationService service = new PriceCalculationService();
+        List<Book> bookList = List.of(Book.builder()
+                .title("Clean Code")
+                .author("Robert Martin")
+                .year(2008).build(),
+                Book.builder()
+                .title("Clean Code")
+                .author("Robert Martin")
+                .year(2008).build());
+        Double calculatedPrice = service.calculatePrice(bookList);
+        assertThat(calculatedPrice).isEqualTo(100);
+    }
 }
+
