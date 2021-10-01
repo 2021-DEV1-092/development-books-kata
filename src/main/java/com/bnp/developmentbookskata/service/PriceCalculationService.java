@@ -4,14 +4,13 @@ import com.bnp.developmentbookskata.model.Book;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PriceCalculationService {
 
     private static final double BOOK_PRICE = 50d;
-    private static final double TWO_BOOK_DISCOUNT_PERCENTAGE = 5;
+    private static final double TWO_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 5;
+    private static final double THREE_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 10;
 
     public Double calculatePrice(List<Book> bookList) {
         List<Set<Book>> bookListSets = new ArrayList<>();
@@ -27,9 +26,10 @@ public class PriceCalculationService {
                 totalPrice += set.size() * BOOK_PRICE;
             }
             if (set.size() == 2) {
-                double basePrice = set.size() * BOOK_PRICE;
-                double discountedPriceForSet = basePrice - ((basePrice * TWO_BOOK_DISCOUNT_PERCENTAGE) / 100.0);
-                totalPrice += discountedPriceForSet;
+                totalPrice = calculatePriceForBooksSet(totalPrice, set, TWO_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE);
+            }
+            if (set.size() == 3) {
+                totalPrice = calculatePriceForBooksSet(totalPrice, set, THREE_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE);
             }
         }
 
@@ -53,5 +53,13 @@ public class PriceCalculationService {
             }
         }
     }
+
+    private double calculatePriceForBooksSet(double totalPrice, Set<Book> set, double threeUniqueBooksDiscountPercentage) {
+        double basePrice = set.size() * BOOK_PRICE;
+        double discountedPriceForSet = basePrice - ((basePrice * threeUniqueBooksDiscountPercentage) / 100.0);
+        totalPrice += discountedPriceForSet;
+        return totalPrice;
+    }
+
 
 }
