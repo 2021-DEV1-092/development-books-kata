@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BookImportService {
+public class BookService {
 
     public List<Book> importBooks() {
         return List.of(Book.builder()
