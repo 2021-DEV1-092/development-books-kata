@@ -1,6 +1,7 @@
 package com.bnp.developmentbookskata.service;
 
 import com.bnp.developmentbookskata.model.Book;
+import com.bnp.developmentbookskata.utility.BookTestDataHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,30 +26,12 @@ public class PriceCalculationServiceTest {
 
     @Before
     public void setUp() {
-        book_1 = Book.builder()
-                .title("Clean Code")
-                .author("Robert Martin")
-                .year(2008).build();
-
-        book_2 = Book.builder()
-                .title("The Clean Coder")
-                .author("Robert Martin")
-                .year(2011).build();
-
-        book_3 = Book.builder()
-                .title("Clean Architecture")
-                .author("Robert Martin")
-                .year(2017).build();
-
-        book_4 = Book.builder()
-                .title("Test Driven Development by Example")
-                .author("Kent Beck")
-                .year(2003).build();
-
-        book_5 = Book.builder()
-                .title("Working Effectively With Legacy Code")
-                .author("Michael C. Feathers")
-                .year(2001).build();
+        List<Book> books = BookTestDataHelper.returnBasicBookList();
+        book_1 = books.get(0);
+        book_2 = books.get(1);
+        book_3 = books.get(2);
+        book_4 = books.get(3);
+        book_5 = books.get(4);
     }
 
     @Test
