@@ -7,12 +7,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BookImportServiceTest {
+public class BookServiceTest {
 
     @Test
     public void verifyImportBooksReturnsExpectedBooks() {
-        BookImportService bookImportService = new BookImportService();
-        List<Book> importedBooks = bookImportService.importBooks();
+        BookService bookService = new BookService();
+        List<Book> importedBooks = bookService.importBooks();
         Book expectedBook1 = Book.builder()
                 .title("Clean Code")
                 .author("Robert Martin")
