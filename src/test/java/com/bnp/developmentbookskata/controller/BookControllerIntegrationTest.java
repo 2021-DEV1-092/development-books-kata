@@ -11,14 +11,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.*;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -63,7 +61,8 @@ public class BookControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andDo(print()).andReturn().getResponse().getContentAsString();
 
-        List<Book> returnedBooks = new ObjectMapper().readValue(responseAsString, new TypeReference<>() {});
+        List<Book> returnedBooks = new ObjectMapper().readValue(responseAsString, new TypeReference<>() {
+        });
 
         assertThat(returnedBooks).isEqualTo(expectedBooks);
     }
