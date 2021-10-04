@@ -1,17 +1,28 @@
 package com.bnp.developmentbookskata.service;
 
 import com.bnp.developmentbookskata.model.Book;
-import org.junit.jupiter.api.Test;
+import com.bnp.developmentbookskata.repository.BookRepository;
+import com.bnp.developmentbookskata.utility.BookTestDataHelper;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BookServiceTest {
+
+    @Mock
+    BookRepository bookRepository;
 
     @Test
     public void verifyImportBooksReturnsExpectedBooks() {
-        BookService bookService = new BookService();
+        when(bookRepository.findAll()).thenReturn(BookTestDataHelper.returnBasicBookList());
+        BookService bookService = new BookService(bookRepository);
         List<Book> importedBooks = bookService.importBooks();
         Book expectedBook1 = Book.builder()
                 .title("Clean Code")
