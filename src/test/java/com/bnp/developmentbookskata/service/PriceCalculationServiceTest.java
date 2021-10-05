@@ -2,15 +2,20 @@ package com.bnp.developmentbookskata.service;
 
 import com.bnp.developmentbookskata.config.DiscountConfig;
 import com.bnp.developmentbookskata.model.Book;
+import com.bnp.developmentbookskata.model.BookInput;
 import com.bnp.developmentbookskata.utility.BookTestDataHelper;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bnp.developmentbookskata.utility.BookTestDataHelper.createBookInputList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -27,6 +32,9 @@ public class PriceCalculationServiceTest {
     private Book book_4;
     private Book book_5;
     private PriceCalculationService service;
+    @Mock
+    private BookService bookService = Mockito.mock(BookService.class);
+
 
     @Before
     public void setUp() {
@@ -48,14 +56,15 @@ public class PriceCalculationServiceTest {
         discountMap.put(5, 25d);
         discountConfig.setDiscountMap(discountMap);
 
-        service = new PriceCalculationService(discountConfig);
+        service = new PriceCalculationService(discountConfig, bookService);
     }
 
     @Test
     public void verify_1A_ReturnsCorrectPrice() {
         List<Book> bookList = List.of(book_1);
-        Double calculatedPrice = service.calculatePrice(bookList);
-
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
         assertThat(calculatedPrice).isEqualTo(50);
     }
 
@@ -64,7 +73,9 @@ public class PriceCalculationServiceTest {
         List<Book> bookList = List.of(
                 book_1,
                 book_1);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(100);
     }
@@ -74,7 +85,9 @@ public class PriceCalculationServiceTest {
         List<Book> bookList = List.of(
                 book_1,
                 book_2);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(95);
     }
@@ -84,7 +97,9 @@ public class PriceCalculationServiceTest {
         List<Book> bookList = List.of(
                 book_1, book_1, book_1, book_1, book_1,
                 book_2, book_2, book_2);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(385);
     }
@@ -95,7 +110,9 @@ public class PriceCalculationServiceTest {
                 book_1,
                 book_2,
                 book_3);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(135);
     }
@@ -106,7 +123,9 @@ public class PriceCalculationServiceTest {
                 book_1,
                 book_2, book_2, book_2,
                 book_3, book_3);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
         assertThat(calculatedPrice).isEqualTo(280);
     }
 
@@ -116,7 +135,9 @@ public class PriceCalculationServiceTest {
                 book_1,
                 book_2,
                 book_4);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(135);
     }
@@ -127,7 +148,9 @@ public class PriceCalculationServiceTest {
                 book_1, book_1,
                 book_2, book_2,
                 book_3, book_3);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(270);
     }
@@ -139,7 +162,9 @@ public class PriceCalculationServiceTest {
                 book_2,
                 book_3,
                 book_4);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(160);
     }
@@ -151,7 +176,9 @@ public class PriceCalculationServiceTest {
                 book_2, book_2, book_2,
                 book_3, book_3, book_3,
                 book_4, book_4);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(455);
     }
@@ -164,7 +191,9 @@ public class PriceCalculationServiceTest {
                 book_3,
                 book_4,
                 book_5);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(187.5);
     }
@@ -177,7 +206,9 @@ public class PriceCalculationServiceTest {
                 book_3, book_3,
                 book_4,
                 book_5);
-        Double calculatedPrice = service.calculatePrice(bookList);
+        List<BookInput> bookInputList = createBookInputList(bookList);
+        when(bookService.createBookListFromInput(bookInputList)).thenReturn(bookList);
+        Double calculatedPrice = service.calculatePrice(bookInputList);
 
         assertThat(calculatedPrice).isEqualTo(320);
     }

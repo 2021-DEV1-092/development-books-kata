@@ -3,6 +3,7 @@ package com.bnp.developmentbookskata.controller;
 
 import com.bnp.developmentbookskata.DevelopmentBooksKataApplication;
 import com.bnp.developmentbookskata.model.Book;
+import com.bnp.developmentbookskata.model.BookInput;
 import com.bnp.developmentbookskata.model.PriceResponse;
 import com.bnp.developmentbookskata.utility.BookTestDataHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +40,7 @@ public class PriceCalculationControllerIntegrationTest {
     @Test
     public void verifyPriceCalculationForOneBook() throws Exception {
         List<Book> inputList = List.of(BookTestDataHelper.returnBasicBookList().get(0));
-        String content =  objectMapper.writeValueAsString(inputList);
+        String content = objectMapper.writeValueAsString(inputList);
         PriceResponse expectedResponse = new PriceResponse();
         expectedResponse.setTotalPrice(50d);
 
@@ -82,7 +83,7 @@ public class PriceCalculationControllerIntegrationTest {
 
     @Test
     public void verifyPriceCalculationFor5DifferentBooks() throws Exception {
-        List<Book> inputList = BookTestDataHelper.returnBasicBookList();
+        List<BookInput> inputList = BookTestDataHelper.createBookInputList(BookTestDataHelper.returnBasicBookList());
         String content = objectMapper.writeValueAsString(inputList);
         PriceResponse expectedResponse = new PriceResponse();
         expectedResponse.setTotalPrice(187.5d);

@@ -36,32 +36,28 @@ public class BookControllerIntegrationTest {
     public void verifyReturnListOfExpectedBooks() throws Exception {
         List<Book> expectedBooks = new ArrayList<>();
         expectedBooks.add(Book.builder()
-                .id(1)
                 .title("Clean Code")
                 .author("Robert Martin")
                 .year(2008).build());
         expectedBooks.add(Book.builder()
-                .id(2)
                 .title("The Clean Coder")
                 .author("Robert Martin")
                 .year(2011).build());
         expectedBooks.add(Book.builder()
-                .id(3)
                 .title("Clean Architecture")
                 .author("Robert Martin")
                 .year(2017).build());
         expectedBooks.add(Book.builder()
-                .id(4)
                 .title("Test Driven Development by Example")
                 .author("Kent Beck")
                 .year(2003).build());
         expectedBooks.add(Book.builder()
-                .id(5)
                 .title("Working Effectively With Legacy Code")
                 .author("Michael C. Feathers")
                 .year(2001).build());
 
         String responseAsString = mockMvc.perform(get("/books"))
+                .andExpect(jsonPath("$.[0].id").doesNotExist())
                 .andExpect(jsonPath("$.[0].title").value("Clean Code"))
                 .andExpect(jsonPath("$.[0].author").value("Robert Martin"))
                 .andExpect(jsonPath("$.[0].year").value(2008))
