@@ -1,6 +1,6 @@
 package com.bnp.developmentbookskata.controller;
 
-import com.bnp.developmentbookskata.model.Book;
+import com.bnp.developmentbookskata.model.BookInput;
 import com.bnp.developmentbookskata.model.PriceResponse;
 import com.bnp.developmentbookskata.service.PriceCalculationService;
 import org.springframework.http.MediaType;
@@ -22,7 +22,7 @@ public class PriceCalculationController {
     }
 
     @PostMapping(path = "/calculatePrice", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> calculatePriceOfBooks(@RequestBody List<Book> bookList){
+    public ResponseEntity<?> calculatePriceOfBooks(@RequestBody List<BookInput> bookList) {
         Double calculatedPrice = priceCalculationService.calculatePrice(bookList);
         PriceResponse priceResponse = new PriceResponse(calculatedPrice);
         return ResponseEntity.ok(priceResponse);

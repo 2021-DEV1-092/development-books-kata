@@ -2,23 +2,29 @@ package com.bnp.developmentbookskata.service;
 
 import com.bnp.developmentbookskata.config.DiscountConfig;
 import com.bnp.developmentbookskata.model.Book;
+import com.bnp.developmentbookskata.model.BookInput;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class PriceCalculationService {
 
     private final DiscountConfig discountConfig;
+    private final BookService bookService;
 
-    public PriceCalculationService(DiscountConfig discountConfig) {
+    public PriceCalculationService(DiscountConfig discountConfig, BookService bookService) {
         this.discountConfig = discountConfig;
+        this.bookService = bookService;
     }
 
-    public Double calculatePrice(List<Book> bookList) {
+    public Double calculatePrice(List<BookInput> bookList) {
 
-        List<Set<Book>> normalSets = groupBooksInUniqueSets(bookList);
-        List<Set<Book>> smallestSets = groupBooksInUniqueAndSmallestSets(bookList);
+        List<Set<Book>> normalSets = groupBooksInUniqueSets(bookService.createBookListFromInput(bookList));
+        List<Set<Book>> smallestSets = groupBooksInUniqueAndSmallestSets(bookService.createBookListFromInput(bookList));
 
         double totalPriceNormalSets = getTotalPriceForBookSets(normalSets);
         double totalPriceSmallestSets = getTotalPriceForBookSets(smallestSets);
