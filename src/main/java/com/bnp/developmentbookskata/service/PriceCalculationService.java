@@ -1,5 +1,6 @@
 package com.bnp.developmentbookskata.service;
 
+import com.bnp.developmentbookskata.config.DiscountConfig;
 import com.bnp.developmentbookskata.model.Book;
 import org.springframework.stereotype.Service;
 
@@ -8,11 +9,11 @@ import java.util.*;
 @Service
 public class PriceCalculationService {
 
-    private static final double BOOK_PRICE = 50d;
-    private static final double TWO_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 5;
-    private static final double THREE_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 10;
-    private static final double FOUR_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 20;
-    private static final double FIVE_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE = 25;
+    private final DiscountConfig discountConfig;
+
+    public PriceCalculationService(DiscountConfig discountConfig) {
+        this.discountConfig = discountConfig;
+    }
 
     public Double calculatePrice(List<Book> bookList) {
 
@@ -28,21 +29,8 @@ public class PriceCalculationService {
     private double getTotalPriceForBookSets(List<Set<Book>> bookListSets) {
         double totalPrice = 0d;
         for (Set<Book> set : bookListSets) {
-            if (set.size() == 1) {
-                totalPrice += set.size() * BOOK_PRICE;
-            }
-            if (set.size() == 2) {
-                totalPrice = calculatePriceForBooksSet(totalPrice, set, TWO_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE);
-            }
-            if (set.size() == 3) {
-                totalPrice = calculatePriceForBooksSet(totalPrice, set, THREE_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE);
-            }
-            if (set.size() == 4) {
-                totalPrice = calculatePriceForBooksSet(totalPrice, set, FOUR_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE);
-            }
-            if (set.size() == 5) {
-                totalPrice = calculatePriceForBooksSet(totalPrice, set, FIVE_UNIQUE_BOOKS_DISCOUNT_PERCENTAGE);
-            }
+            Double discountForSet = discountConfig.getDiscountMap().get(set.size());
+            totalPrice += calculatePriceForBooksSet(set, discountForSet);
         }
         return totalPrice;
     }
@@ -74,11 +62,12 @@ public class PriceCalculationService {
         return bookListSets;
     }
 
-    private double calculatePriceForBooksSet(double totalPrice, Set<Book> set, double threeUniqueBooksDiscountPercentage) {
-        double basePrice = set.size() * BOOK_PRICE;
-        double discountedPriceForSet = basePrice - ((basePrice * threeUniqueBooksDiscountPercentage) / 100.0);
-        totalPrice += discountedPriceForSet;
-        return totalPrice;
+    private double calculatePriceForBooksSet(Set<Book> set, double discountForSet) {
+        double calculatedPrice = 0d;
+        double basePrice = set.size() * discountConfig.getBookPrice();
+        double discountedPriceForSet = basePrice - ((basePrice * discountForSet) / 100.0);
+        calculatedPrice += discountedPriceForSet;
+        return calculatedPrice;
     }
 
     private boolean addBookToExistingSet(List<Set<Book>> bookListSets, Book book) {
