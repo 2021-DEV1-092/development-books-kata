@@ -1,10 +1,7 @@
 package com.bnp.developmentbookskata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +14,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "books")
+@EqualsAndHashCode(exclude = "id")
 public class Book {
 
     @Id

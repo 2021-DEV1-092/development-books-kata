@@ -9,11 +9,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 import static com.bnp.developmentbookskata.utility.BookTestDataHelper.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -106,6 +107,41 @@ public class BookServiceTest {
                 BOOK_1, BOOK_1, BOOK_1, BOOK_1,
                 BOOK_3
         ));
+    }
+
+
+    @Test
+    public void verifyNoExceptionWhenInputBooksExist() {
+        BookInput bookInput_1 = new BookInput();
+        BookInput bookInput_2 = new BookInput();
+        bookInput_1.setBook(BOOK_1);
+        bookInput_1.setCount(2);
+        bookInput_2.setBook(BOOK_3);
+        bookInput_2.setCount(4);
+        List<BookInput> bookInputs = List.of(bookInput_1, bookInput_2);
+
+        assertThatCode(() -> bookService.checkAllBooksExistsInDB(bookInputs)).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void verifyThrowExceptionWhenInputBookDoesNotExist() {
+        BookInput bookInput_1 = new BookInput();
+        BookInput bookInput_2 = new BookInput();
+        BookInput bookInput_3 = new BookInput();
+        bookInput_1.setBook(BOOK_1);
+        bookInput_1.setCount(2);
+        bookInput_2.setBook(BOOK_3);
+        bookInput_2.setCount(4);
+        Book noneExistingBook = Book.builder()
+                .year(2451)
+                .title("Too like the lightning")
+                .author("Ada Palmer").build();
+        bookInput_3.setBook(noneExistingBook);
+        List<BookInput> bookInputs = List.of(bookInput_1, bookInput_2, bookInput_3);
+
+        assertThatThrownBy(() -> bookService.checkAllBooksExistsInDB(bookInputs))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessage("400 BAD_REQUEST \"Book: Book(id=null, title=Too like the lightning, author=Ada Palmer, year=2451) not present in DB\"");
     }
 
 }
