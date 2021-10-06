@@ -3,11 +3,12 @@ Code Kata for BNP Paribas Fortis application
 
 # Running the application
 
-To compile execute
+To compile execute:
 
 ````
 mvn clean install
 ````
+This will also generate the asciidocs, to be found at {projectDir}/target/generated-docs/index.html
 
 To run the application execute the following command:
 ````

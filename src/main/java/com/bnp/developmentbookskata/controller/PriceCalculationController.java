@@ -6,6 +6,7 @@ import com.bnp.developmentbookskata.service.BookService;
 import com.bnp.developmentbookskata.service.PriceCalculationService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,17 @@ public class PriceCalculationController {
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
-        return ResponseEntity.ok(priceCalculationService.calculatePrice(bookList));
+
+        return ResponseEntity.ok(getPriceResponse(bookList));
+    }
+
+    private PriceResponse getPriceResponse(List<BookInput> bookList) {
+        PriceResponse priceResponse;
+        if (CollectionUtils.isEmpty(bookList)) {
+            priceResponse = PriceResponse.builder().finalPrice(0d).basePrice(0d).totalDiscount(0d).totalBooks(0).build();
+        } else {
+            priceResponse = priceCalculationService.calculatePrice(bookList);
+        }
+        return priceResponse;
     }
 }
