@@ -39,8 +39,17 @@ public class PriceCalculationControllerIntegrationTest {
 
     @Test
     public void verifyPriceCalculationForOneBook() throws Exception {
-        List<Book> inputList = List.of(BookTestDataHelper.returnBasicBookList().get(0));
-        String content = objectMapper.writeValueAsString(inputList);
+        String content = """
+                [
+                    {
+                        "book":{
+                        "title": "Clean Code",
+                        "author": "Robert Martin",
+                        "year": 2008
+                        },
+                         "count": 1
+                    }
+                ]""";
         PriceResponse expectedResponse = new PriceResponse();
         expectedResponse.setTotalPrice(50d);
 
@@ -61,7 +70,8 @@ public class PriceCalculationControllerIntegrationTest {
     @Test
     public void verifyPriceCalculationForSixSameBooks() throws Exception {
         List<Book> baseList = BookTestDataHelper.returnBasicBookList();
-        List<Book> inputList = List.of(baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3));
+        List<Book> bookList = List.of(baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3));
+        List<BookInput> inputList = BookTestDataHelper.createBookInputList(bookList);
         String content = objectMapper.writeValueAsString(inputList);
         PriceResponse expectedResponse = new PriceResponse();
         expectedResponse.setTotalPrice(300d);
@@ -100,5 +110,45 @@ public class PriceCalculationControllerIntegrationTest {
         PriceResponse priceResponse = new ObjectMapper().readValue(response, PriceResponse.class);
 
         assertThat(priceResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    public void verifyBadRequestExceptionForEmptyBook() throws Exception {
+        Book emptyBook = Book.builder().build();
+        List<BookInput> inputList = List.of(new BookInput(emptyBook, null));
+        String content = objectMapper.writeValueAsString(inputList);
+
+
+        String response = mockMvc.perform(post("/calculatePrice")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        assertThat(response).isEqualTo("400 BAD_REQUEST \"Book: Book(id=null, title=null, author=null, year=null) not present in DB\"");
+    }
+
+    @Test
+    public void verifyBadRequestExceptionForNoneExistingBook() throws Exception {
+        Book noneExistingBook = Book.builder().author("Frank Herbert").title("Dune").year(1965).build();
+        List<BookInput> inputList = List.of(new BookInput(noneExistingBook, null));
+        String content = objectMapper.writeValueAsString(inputList);
+
+
+        String response = mockMvc.perform(post("/calculatePrice")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        assertThat(response).isEqualTo("400 BAD_REQUEST \"Book: Book(id=null, title=Dune, author=Frank Herbert, year=1965) not present in DB\"");
     }
 }
