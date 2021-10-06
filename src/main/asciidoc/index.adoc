@@ -1,0 +1,63 @@
+= Development Books Kata Discount Calculator
+:snippets: ../../../target/snippets
+:toc: left
+
+== Calculate Price
+=== Basic Calculate Price Request
+
+.request
+include::{snippets}/calculate-price-basic/http-request.adoc[]
+
+.response
+include::{snippets}/calculate-price-basic/http-response.adoc[]
+
+.responseFields
+include::{snippets}/calculate-price-basic/response-fields.adoc[]
+
+=== Mixed Calculate Price Request
+
+It is possible to give a mixed structure of books in the request boy without count values or with count values on null. Also, the same book can be repeated multiple times in the request and added up the result.
+
+.request
+include::{snippets}/calculate-price-mixed/http-request.adoc[]
+
+.response
+include::{snippets}/calculate-price-mixed/http-response.adoc[]
+
+.responseFields
+include::{snippets}/calculate-price-mixed/response-fields.adoc[]
+
+=== Empty List Calculate Price Request
+
+When giving an empty list/array as the request body, a correct result is returned.
+
+.request
+include::{snippets}/calculate-price-empty-request/http-request.adoc[]
+
+.response
+include::{snippets}/calculate-price-empty-request/http-response.adoc[]
+
+=== Non-existing Book Request Exception
+
+When a book is given in the payload that does not exist in the database, a 400 bad request exception is thrown.
+
+.request
+include::{snippets}/calculate-price-wrong-book-exception/http-request.adoc[]
+
+.response
+include::{snippets}/calculate-price-wrong-book-exception/http-response.adoc[]
+
+== Books
+=== Return List of Available Books
+
+.request
+include::{snippets}/get-books/http-request.adoc[]
+
+.response
+include::{snippets}/get-books/http-response.adoc[]
+
+.responseFields
+include::{snippets}/get-books/response-fields.adoc[]
+
+
+

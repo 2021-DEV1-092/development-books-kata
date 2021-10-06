@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,6 +19,11 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@AutoConfigureRestDocs(outputDir = "target/snippets")
 public class BookControllerIntegrationTest {
 
     @Autowired
@@ -62,7 +69,13 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.[0].author").value("Robert Martin"))
                 .andExpect(jsonPath("$.[0].year").value(2008))
                 .andExpect(status().isOk())
-                .andDo(print()).andReturn().getResponse().getContentAsString();
+                .andDo(print())
+                .andDo(document("get-books", preprocessResponse(prettyPrint()), responseFields(
+                        fieldWithPath("[].title").description("Title of the book"),
+                        fieldWithPath("[].author").description("Author of the book"),
+                        fieldWithPath("[].year").description("Year book was published")
+                )))
+                .andReturn().getResponse().getContentAsString();
 
         List<Book> returnedBooks = new ObjectMapper().readValue(responseAsString, new TypeReference<>() {
         });
