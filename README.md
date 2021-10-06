@@ -3,13 +3,22 @@ Code Kata for BNP Paribas Fortis application
 
 # Running the application
 
-Execute the following command:
+To compile execute
+
+````
+mvn clean install
+````
+
+To run the application execute the following command:
+````
 mvn spring-boot:run
+````
+
 or simply import project and run in your IDE.
 
 # API description
 
-The endpoint to calculate the books can be accessed on localhost:8081/calculatePrice
+The endpoint to calculate the books can be accessed on http://localhost:8081/calculatePrice
 It is a POST request using the following structure:
 
 ````
@@ -32,7 +41,7 @@ It is a POST request using the following structure:
 ]
 ````
 
-The "count" object is optional. Count expresses the total count/amount of the given book. If no count is given, 1 item of the book will be assumed.
+The "count" variable is optional. Count expresses the total count/amount of the given book. If no count is given, 1 item of the book will be assumed.
 Multiple combinations of the same book (with or without count) are accepted and will be added up in the final calculation.
 The output is a response with details of the total price of the books - for example:
 
@@ -45,7 +54,8 @@ The output is a response with details of the total price of the books - for exam
 }
 ````
 
-To get the list of available books use localhost:8081/books which will return a list like this:
+To get the list of available books use a GET request on http://localhost:8081/books. 
+This will return a list like this:
 
 ````
 [
