@@ -32,8 +32,6 @@ public class PriceCalculationController {
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
-        Double calculatedPrice = priceCalculationService.calculatePrice(bookList);
-        PriceResponse priceResponse = new PriceResponse(calculatedPrice);
-        return ResponseEntity.ok(priceResponse);
+        return ResponseEntity.ok(priceCalculationService.calculatePrice(bookList));
     }
 }
