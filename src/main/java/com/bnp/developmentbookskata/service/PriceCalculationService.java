@@ -3,6 +3,7 @@ package com.bnp.developmentbookskata.service;
 import com.bnp.developmentbookskata.config.DiscountConfig;
 import com.bnp.developmentbookskata.model.Book;
 import com.bnp.developmentbookskata.model.BookInput;
+import com.bnp.developmentbookskata.model.PriceResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,15 +22,26 @@ public class PriceCalculationService {
         this.bookService = bookService;
     }
 
-    public Double calculatePrice(List<BookInput> bookList) {
-
-        List<Set<Book>> normalSets = groupBooksInUniqueSets(bookService.createBookListFromInput(bookList));
-        List<Set<Book>> smallestSets = groupBooksInUniqueAndSmallestSets(bookService.createBookListFromInput(bookList));
+    public PriceResponse calculatePrice(List<BookInput> bookList) {
+        List<Book> bookListFromInput = bookService.createBookListFromInput(bookList);
+        List<Set<Book>> normalSets = groupBooksInUniqueSets(bookListFromInput);
+        List<Set<Book>> smallestSets = groupBooksInUniqueAndSmallestSets(bookListFromInput);
 
         double totalPriceNormalSets = getTotalPriceForBookSets(normalSets);
         double totalPriceSmallestSets = getTotalPriceForBookSets(smallestSets);
 
-        return Math.min(totalPriceNormalSets, totalPriceSmallestSets);
+        return createPriceResponse(bookListFromInput, totalPriceNormalSets, totalPriceSmallestSets);
+    }
+
+    private PriceResponse createPriceResponse(List<Book> bookListFromInput, double totalPriceNormalSets, double totalPriceSmallestSets) {
+        double basePrice = bookListFromInput.size() * discountConfig.getBookPrice();
+        double finalPrice = Math.min(totalPriceNormalSets, totalPriceSmallestSets);
+        return PriceResponse.builder()
+                .totalBooks(bookListFromInput.size())
+                .basePrice(basePrice)
+                .totalDiscount(basePrice - finalPrice)
+                .finalPrice(finalPrice)
+                .build();
     }
 
     private double getTotalPriceForBookSets(List<Set<Book>> bookListSets) {

@@ -50,53 +50,14 @@ public class PriceCalculationControllerIntegrationTest {
                          "count": 1
                     }
                 ]""";
-        PriceResponse expectedResponse = new PriceResponse();
-        expectedResponse.setTotalPrice(50d);
 
-        String response = mockMvc.perform(post("/calculatePrice")
-                        .content(content)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        PriceResponse expectedResponse =PriceResponse.builder()
+                .totalBooks(1)
+                .basePrice(50d)
+                .totalDiscount(0d)
+                .finalPrice(50d)
+                .build();
 
-        PriceResponse priceReponse = new ObjectMapper().readValue(response, PriceResponse.class);
-
-        assertThat(priceReponse).isEqualTo(expectedResponse);
-    }
-
-    @Test
-    public void verifyPriceCalculationForSixSameBooks() throws Exception {
-        List<Book> baseList = BookTestDataHelper.returnBasicBookList();
-        List<Book> bookList = List.of(baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3));
-        List<BookInput> inputList = BookTestDataHelper.createBookInputList(bookList);
-        String content = objectMapper.writeValueAsString(inputList);
-        PriceResponse expectedResponse = new PriceResponse();
-        expectedResponse.setTotalPrice(300d);
-
-        String response = mockMvc.perform(post("/calculatePrice")
-                        .content(content)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        PriceResponse priceReponse = new ObjectMapper().readValue(response, PriceResponse.class);
-
-        assertThat(priceReponse).isEqualTo(expectedResponse);
-    }
-
-
-    @Test
-    public void verifyPriceCalculationFor5DifferentBooks() throws Exception {
-        List<BookInput> inputList = BookTestDataHelper.createBookInputList(BookTestDataHelper.returnBasicBookList());
-        String content = objectMapper.writeValueAsString(inputList);
-        PriceResponse expectedResponse = new PriceResponse();
-        expectedResponse.setTotalPrice(187.5d);
 
         String response = mockMvc.perform(post("/calculatePrice")
                         .content(content)
@@ -110,6 +71,45 @@ public class PriceCalculationControllerIntegrationTest {
         PriceResponse priceResponse = new ObjectMapper().readValue(response, PriceResponse.class);
 
         assertThat(priceResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    public void verifyPriceCalculationForSixSameBooks() throws Exception {
+        List<Book> baseList = BookTestDataHelper.returnBasicBookList();
+        List<Book> bookList = List.of(baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3), baseList.get(3));
+        List<BookInput> inputList = BookTestDataHelper.createBookInputList(bookList);
+        String content = objectMapper.writeValueAsString(inputList);
+        String expectedResponse = "{\"finalPrice\":300.0,\"basePrice\":300.0,\"totalDiscount\":0.0,\"totalBooks\":6}";
+
+        String response = mockMvc.perform(post("/calculatePrice")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(response).isEqualTo(expectedResponse);
+    }
+
+
+    @Test
+    public void verifyPriceCalculationFor5DifferentBooks() throws Exception {
+        List<BookInput> inputList = BookTestDataHelper.createBookInputList(BookTestDataHelper.returnBasicBookList());
+        String content = objectMapper.writeValueAsString(inputList);
+        String expectedResponse = "{\"finalPrice\":187.5,\"basePrice\":250.0,\"totalDiscount\":62.5,\"totalBooks\":5}";
+
+        String response = mockMvc.perform(post("/calculatePrice")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertThat(response).isEqualTo(expectedResponse);
     }
 
     @Test
