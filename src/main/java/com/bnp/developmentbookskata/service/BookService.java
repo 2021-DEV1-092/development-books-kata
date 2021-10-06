@@ -21,7 +21,6 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    // TODO change name of method
     public List<Book> importBooks() {
         return bookRepository.findAll();
     }
