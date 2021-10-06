@@ -3,10 +3,17 @@ Code Kata for BNP Paribas Fortis application
 
 # Running the application
 
-To compile run mvn clean install
+To compile execute
 
-Execute the following command:
+````
+mvn clean install
+````
+
+To run the application execute the following command:
+````
 mvn spring-boot:run
+````
+
 or simply import project and run in your IDE.
 
 # API description
