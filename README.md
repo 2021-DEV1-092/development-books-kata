@@ -19,7 +19,11 @@ or simply import project and run in your IDE.
 
 # API description
 
+
+A postman collection is included on the root of the project with some basic examples: Kata-2021-DEV1-092.postman_collection.json.
+
 The endpoint to calculate the books can be accessed on http://localhost:8081/calculatePrice
+
 It is a POST request using the following structure:
 
 ````
