@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "364f5a3f-85f7-4564-b4ac-c3bc3760ac06",
+		"name": "Kata-2021-DEV1-092",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "calculatePrice example basic",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"book\": {\n            \"title\": \"Clean Code\",\n            \"author\": \"Robert Martin\",\n            \"year\": 2008\n        },\n        \"count\": 3\n    },\n    {\n        \"book\": {\n            \"title\": \"Test Driven Development by Example\",\n            \"author\": \"Kent Beck\",\n            \"year\": 2003\n        },\n        \"count\": 2\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/calculatePrice",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"calculatePrice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "calculatePrice example mixed",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"book\": {\n            \"title\": \"Clean Code\",\n            \"author\": \"Robert Martin\",\n            \"year\": 2008\n        },\n        \"count\": null\n    },\n    {\n        \"book\": {\n            \"title\": \"The Clean Coder\",\n            \"author\": \"Robert Martin\",\n            \"year\": 2011\n        },\n        \"count\": 1\n    },\n    {\n        \"book\": {\n            \"title\": \"Clean Architecture\",\n            \"author\": \"Robert Martin\",\n            \"year\": 2017\n        }\n    },\n    {\n        \"book\": {\n            \"title\": \"Test Driven Development by Example\",\n            \"author\": \"Kent Beck\",\n            \"year\": 2003\n        },\n        \"count\": 1\n    },\n    {\n        \"book\": {\n            \"title\": \"Working Effectively With Legacy Code\",\n            \"author\": \"Michael C. Feathers\",\n            \"year\": 2001\n        },\n        \"count\": 1\n    },\n    {\n        \"book\": {\n            \"title\": \"Clean Code\",\n            \"author\": \"Robert Martin\",\n            \"year\": 2008\n        },\n        \"count\": null\n    },\n    {\n        \"book\": {\n            \"title\": \"Clean Code\",\n            \"author\": \"Robert Martin\",\n            \"year\": 2008\n        },\n        \"count\": 4\n    },\n    {\n        \"book\": {\n            \"title\": \"Test Driven Development by Example\",\n            \"author\": \"Kent Beck\",\n            \"year\": 2003\n        },\n        \"count\": 5\n    },\n    {\n        \"book\": {\n            \"title\": \"Working Effectively With Legacy Code\",\n            \"author\": \"Michael C. Feathers\",\n            \"year\": 2001\n        },\n        \"count\": 3\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/calculatePrice",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"calculatePrice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "calculatPrice Book does not exist exception",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"book\": {\n            \"title\": \"nonsense\",\n            \"author\": \"Robert Martin\",\n            \"year\": 2008\n        }\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/calculatePrice",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"calculatePrice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "calculatPrice Missing variable of book results in book not existing exception",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"book\": {\n            \"title\": \"Clean Code\",\n            \"year\": 2008\n        },\n        \"count\": 3\n    },\n    {\n        \"book\": {\n            \"title\": \"Test Driven Development by Example\",\n            \"author\": \"Kent Beck\",\n            \"year\": 2003\n        },\n        \"count\": 2\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/calculatePrice",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"calculatePrice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get books",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"book\": {\n            \"title\": \"Clean Code\",\n            \"author\": \"Robert Martin\",\n            \"year\": 2008\n        },\n        \"count\": 3\n    },\n    {\n        \"book\": {\n            \"title\": \"Test Driven Development by Example\",\n            \"author\": \"Kent Beck\",\n            \"year\": 2003\n        },\n        \"count\": 2\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/books",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
